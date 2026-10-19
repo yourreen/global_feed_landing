@@ -5,570 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Feed — Честная лента и приватные чаты</title>
     <meta name="description" content="Социальная сеть без алгоритмов. Только хронология. Приватные чаты с E2E-шифрованием. Мы не читаем ваши сообщения.">
-    <style>
-        :root {
-            --bg: #0e1016;
-            --surface: #161923;
-            --surface-2: #1c2030;
-            --text: #eaeef7;
-            --text-muted: #9aa2b6;
-            --primary: #7f9cff;
-            --primary-hover: #6688ff;
-            --border: #262b38;
-            --green: #4ade80;
-            --red: #f87171;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Фоновое свечение */
-        .bg-glow {
-            position: fixed;
-            top: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 900px;
-            height: 900px;
-            background: radial-gradient(circle, rgba(127,156,255,0.14) 0%, rgba(127,156,255,0) 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Навигация */
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(12px);
-            background: rgba(14, 16, 22, 0.75);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-inner {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            font-size: 18px;
-        }
-        .nav-logo span { color: var(--primary); }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--text); }
-
-        @media (max-width: 600px) {
-            .nav-links { display: none; }
-        }
-
-        header {
-            padding: 100px 0 40px;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--text);
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .logo span { color: var(--primary); }
-
-        .beta-badge {
-            display: inline-block;
-            background-color: rgba(127, 156, 255, 0.15);
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            border: 1px solid rgba(127, 156, 255, 0.3);
-        }
-
-        h1 {
-            font-size: 52px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -1.5px;
-            background: linear-gradient(180deg, #fff 0%, #b8c2dd 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: var(--text-muted);
-            max-width: 620px;
-            margin: 0 auto 40px;
-        }
-
-        .status-text {
-            display: inline-block;
-            padding: 16px 24px;
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-        .status-text strong { color: var(--text); }
-
-        /* Статистика */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 48px;
-        }
-
-        .stat {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 12px;
-        }
-
-        .stat-value {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -0.5px;
-        }
-        .stat-value span { color: var(--primary); }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        @media (max-width: 600px) {
-            .stats { grid-template-columns: 1fr; }
-        }
-
-        /* Заголовки секций */
-        .section {
-            margin-top: 100px;
-            text-align: center;
-        }
-
-        .section-tag {
-            display: inline-block;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .section h2 {
-            font-size: 34px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 12px;
-        }
-
-        .section-sub {
-            color: var(--text-muted);
-            font-size: 17px;
-            max-width: 560px;
-            margin: 0 auto 40px;
-        }
-
-        /* Преимущества */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            text-align: left;
-        }
-
-        .feature-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            transition: border-color 0.25s, transform 0.25s;
-        }
-        .feature-card:hover {
-            border-color: rgba(127,156,255,0.45);
-            transform: translateY(-3px);
-        }
-
-        .feature-icon {
-            font-size: 26px;
-            margin-bottom: 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            background: rgba(127,156,255,0.1);
-            border: 1px solid rgba(127,156,255,0.25);
-        }
-
-        .feature-card h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            font-size: 15px;
-            color: var(--text-muted);
-        }
-
-        /* Как это работает */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            text-align: left;
-            margin-top: 8px;
-        }
-
-        .step {
-            position: relative;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 22px;
-        }
-
-        .step-num {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            border: 1px solid rgba(127,156,255,0.35);
-            background: rgba(127,156,255,0.1);
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 14px;
-        }
-
-        .step h4 {
-            font-size: 17px;
-            margin-bottom: 6px;
-        }
-        .step p {
-            font-size: 15px;
-            color: var(--text-muted);
-        }
-
-        @media (max-width: 700px) {
-            .steps { grid-template-columns: 1fr; }
-        }
-
-        /* Технологии */
-        .tech-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .tech {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: border-color 0.2s;
-        }
-        .tech:hover { border-color: rgba(127,156,255,0.45); }
-        .tech span { color: var(--primary); font-weight: 500; }
-
-        /* Сравнение */
-        .comparison {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: left;
-        }
-
-        .comparison h2 {
-            text-align: center;
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .comparison-col h4 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .comparison-col ul { list-style: none; }
-
-        .comparison-col li {
-            margin-bottom: 12px;
-            font-size: 15px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .comparison-col.others { opacity: 0.6; }
-
-        .comparison-col li::before {
-            content: "✓";
-            color: var(--green);
-            font-weight: bold;
-        }
-        .comparison-col.others li::before {
-            content: "✕";
-            color: var(--red);
-        }
-
-        /* Roadmap */
-        .roadmap {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            text-align: left;
-        }
-
-        .roadmap-item {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-        }
-
-        .roadmap-badge {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            margin-bottom: 12px;
-        }
-        .done { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
-        .active { background: rgba(127,156,255,0.15); color: var(--primary); border: 1px solid rgba(127,156,255,0.3); }
-        .soon { background: rgba(154,162,182,0.12); color: var(--text-muted); border: 1px solid var(--border); }
-
-        .roadmap-item h4 { font-size: 15px; margin-bottom: 4px; }
-        .roadmap-item p { font-size: 13px; color: var(--text-muted); }
-
-        @media (max-width: 800px) {
-            .roadmap { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 520px) {
-            .roadmap { grid-template-columns: 1fr; }
-        }
-
-        /* FAQ */
-        .faq {
-            max-width: 720px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .faq details {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .faq summary {
-            cursor: pointer;
-            padding: 18px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            transition: color 0.2s;
-        }
-        .faq summary::-webkit-details-marker { display: none; }
-        .faq summary:hover { color: var(--primary); }
-
-        .faq summary::after {
-            content: "+";
-            font-size: 22px;
-            font-weight: 300;
-            color: var(--primary);
-            transition: transform 0.2s;
-        }
-        .faq details[open] summary::after {
-            transform: rotate(45deg);
-        }
-
-        .faq details[open] summary { color: var(--primary); }
-
-        .faq .faq-body {
-            padding: 0 20px 18px;
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-
-        /* CTA */
-        .cta {
-            margin-top: 100px;
-            background: linear-gradient(135deg, rgba(127,156,255,0.12), rgba(127,156,255,0.02));
-            border: 1px solid rgba(127,156,255,0.3);
-            border-radius: 20px;
-            padding: 48px 24px;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -0.8px;
-            margin-bottom: 12px;
-        }
-
-        .cta p {
-            color: var(--text-muted);
-            font-size: 17px;
-            margin-bottom: 28px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--primary);
-            color: #0e1016;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            text-decoration: none;
-            transition: background 0.2s, transform 0.2s;
-        }
-        .btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-
-        /* Футер */
-        footer {
-            margin-top: 90px;
-            padding: 40px 0;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 14px;
-            border-top: 1px solid var(--border);
-            position: relative;
-            z-index: 1;
-        }
-
-        footer a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        footer a:hover { color: var(--primary); }
-
-        /* Анимация появления */
-        .reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 36px; letter-spacing: -1px; }
-            .subtitle { font-size: 18px; }
-            .section h2 { font-size: 27px; }
-            .comparison-grid { grid-template-columns: 1fr; }
-            .comparison-col.others { margin-top: 24px; }
-            header { padding: 60px 0 30px; }
-            .section { margin-top: 72px; }
-            .cta { padding: 36px 18px; }
-            .cta h2 { font-size: 24px; }
-        }
-    </style>
+    <meta property="og:title" content="Global Feed — Честная лента и приватные чаты">
+    <meta property="og:description" content="Социальная сеть без алгоритмов. Только хронология. Приватные чаты с E2E-шифрованием.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0e1016">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="bg-glow"></div>
+<div class="bg-glow" aria-hidden="true"></div>
 
-<!-- Навигация -->
-<nav>
-    <div class="nav-inner">
-        <div class="nav-logo">GLOBAL<span>FEED</span></div>
-        <ul class="nav-links">
+<nav class="nav">
+    <div class="nav__inner">
+        <a href="#" class="nav__logo">GLOBAL<span>FEED</span></a>
+        <ul class="nav__links">
             <li><a href="#features">Возможности</a></li>
             <li><a href="#how">Как работает</a></li>
             <li><a href="#tech">Технологии</a></li>
@@ -578,225 +29,213 @@
     </div>
 </nav>
 
-<header class="container">
-    <div class="logo">GLOBAL<span>FEED</span></div>
-
-    <div class="beta-badge">Закрытая бета</div>
-
-    <h1>Честная лента.<br>Приватные чаты.</h1>
-    <p class="subtitle">
-        Социальная сеть, какой она должна быть. Без скрытых алгоритмов, которые решают, что тебе показать. Мы не читаем твои сообщения.
-    </p>
-
-    <div class="status-text">
-        Мы в процессе разработки. <strong>Скачивание пока недоступно.</strong><br>
-        Следите за обновлениями в нашем Telegram-канале.
-    </div>
-
-    <!-- Статистика -->
-    <div class="stats reveal">
-        <div class="stat">
-            <div class="stat-value">0<span>%</span></div>
-            <div class="stat-label">Алгоритмов в ленте</div>
+<header class="hero">
+    <div class="container">
+        <div class="hero__logo">GLOBAL<span>FEED</span></div>
+        <div class="badge">Закрытая бета</div>
+        <h1 class="hero__title">Честная лента.<br>Приватные чаты.</h1>
+        <p class="hero__subtitle">
+            Социальная сеть, какой она должна быть. Без скрытых алгоритмов, которые решают, что тебе показать. Мы не читаем твои сообщения.
+        </p>
+        <div class="hero__status">
+            Мы в процессе разработки. <strong>Скачивание пока недоступно.</strong><br>
+            Следите за обновлениями в нашем Telegram-канале.
         </div>
-        <div class="stat">
-            <div class="stat-value">E2E</div>
-            <div class="stat-label">Сквозное шифрование</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">0</div>
-            <div class="stat-label">Прочитанных сообщений</div>
+
+        <div class="stats reveal">
+            <div class="stat">
+                <div class="stat__value">0<span>%</span></div>
+                <div class="stat__label">Алгоритмов в ленте</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">E2E</div>
+                <div class="stat__label">Сквозное шифрование</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">0</div>
+                <div class="stat__label">Прочитанных сообщений</div>
+            </div>
         </div>
     </div>
 </header>
 
-<!-- Возможности -->
-<section class="container section" id="features">
-    <div class="section-tag">Возможности</div>
-    <h2>Всё, что нужно. Ничего лишнего.</h2>
-    <p class="section-sub">Три принципа, на которых построен Global Feed.</p>
+<section class="section" id="features">
+    <div class="container">
+        <div class="section__tag">Возможности</div>
+        <h2 class="section__title">Всё, что нужно. Ничего лишнего.</h2>
+        <p class="section__sub">Три принципа, на которых построен Global Feed.</p>
 
-    <div class="features reveal">
-        <div class="feature-card">
-            <div class="feature-icon">⏳</div>
-            <h3>Только хронология</h3>
-            <p>Ты видишь все посты людей, на которых подписан. Новые сверху. Никакой магии и «умной» сортировки.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <h3>E2E-шифрование</h3>
-            <p>Личные и групповые чаты защищены сквозным шифрованием (X25519 + AES-GCM). Ключи есть только у вас.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🚫</div>
-            <h3>Ноль рекламы</h3>
-            <p>Пока в бете — никакой рекламы. В будущем она появится только для бесплатных пользователей. VIP-подписка её отключает.</p>
-        </div>
-    </div>
-</section>
-
-<!-- Как это работает -->
-<section class="container section" id="how">
-    <div class="section-tag">Как это работает</div>
-    <h2>Три шага — и ты в ленте</h2>
-    <p class="section-sub">Никаких сложных настроек и скрытых механик.</p>
-
-    <div class="steps reveal">
-        <div class="step">
-            <div class="step-num">1</div>
-            <h4>Подпишись</h4>
-            <p>Находи людей по интересам и подписывайся. Лента формируется только тобой.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">2</div>
-            <h4>Читай хронологию</h4>
-            <p>Новые посты сверху. Никто не решает за тебя, что важно, а что нет.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">3</div>
-            <h4>Общайся приватно</h4>
-            <p>Личные и групповые чаты шифруются на устройстве. Сервер видит только зашифрованный поток.</p>
+        <div class="features reveal">
+            <article class="feature">
+                <div class="feature__icon">⏳</div>
+                <h3>Только хронология</h3>
+                <p>Ты видишь все посты людей, на которых подписан. Новые сверху. Никакой магии и «умной» сортировки.</p>
+            </article>
+            <article class="feature">
+                <div class="feature__icon">🔒</div>
+                <h3>E2E-шифрование</h3>
+                <p>Личные и групповые чаты защищены сквозным шифрованием (X25519 + AES-GCM). Ключи есть только у вас.</p>
+            </article>
+            <article class="feature">
+                <div class="feature__icon">🚫</div>
+                <h3>Ноль рекламы</h3>
+                <p>Пока в бете — никакой рекламы. В будущем она появится только для бесплатных пользователей. VIP-подписка её отключает.</p>
+            </article>
         </div>
     </div>
 </section>
 
-<!-- Технологии -->
-<section class="container section" id="tech">
-    <div class="section-tag">Технологии</div>
-    <h2>Приватность не на словах</h2>
-    <p class="section-sub">Мы используем проверенные криптографические примитивы.</p>
+<section class="section" id="how">
+    <div class="container">
+        <div class="section__tag">Как это работает</div>
+        <h2 class="section__title">Три шага — и ты в ленте</h2>
+        <p class="section__sub">Никаких сложных настроек и скрытых механик.</p>
 
-    <div class="tech-grid reveal">
-        <div class="tech">X25519 <span>обмен ключами</span></div>
-        <div class="tech">AES-GCM <span>шифрование</span></div>
-        <div class="tech">E2E <span>сквозное</span></div>
-        <div class="tech">Zero-knowledge <span>подход</span></div>
-        <div class="tech">Open standards <span>без магии</span></div>
-    </div>
-</section>
-
-<!-- Сравнение -->
-<section class="container section">
-    <div class="section-tag">Сравнение</div>
-    <h2>Почему Global Feed?</h2>
-
-    <div class="comparison reveal">
-        <div class="comparison-grid">
-            <div class="comparison-col">
-                <h4>У нас</h4>
-                <ul>
-                    <li>Прямая хронология</li>
-                    <li>Сквозное шифрование</li>
-                    <li>Ты владеешь своими данными</li>
-                    <li>Честные правила</li>
-                </ul>
+        <div class="steps reveal">
+            <div class="step">
+                <div class="step__num">1</div>
+                <h4>Подпишись</h4>
+                <p>Находи людей по интересам и подписывайся. Лента формируется только тобой.</p>
             </div>
-            <div class="comparison-col others">
-                <h4>В других</h4>
-                <ul>
-                    <li>Алгоритмы решают, что показать</li>
-                    <li>Сервер читает переписку</li>
-                    <li>Твой профиль продают рекламщикам</li>
-                    <li>Закрытый «чёрный ящик»</li>
-                </ul>
+            <div class="step">
+                <div class="step__num">2</div>
+                <h4>Читай хронологию</h4>
+                <p>Новые посты сверху. Никто не решает за тебя, что важно, а что нет.</p>
+            </div>
+            <div class="step">
+                <div class="step__num">3</div>
+                <h4>Общайся приватно</h4>
+                <p>Личные и групповые чаты шифруются на устройстве. Сервер видит только зашифрованный поток.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Roadmap -->
-<section class="container section" id="roadmap">
-    <div class="section-tag">Разработка</div>
-    <h2>Где мы сейчас</h2>
-    <p class="section-sub">Прозрачный путь от идеи до релиза.</p>
+<section class="section" id="tech">
+    <div class="container">
+        <div class="section__tag">Технологии</div>
+        <h2 class="section__title">Приватность не на словах</h2>
+        <p class="section__sub">Мы используем проверенные криптографические примитивы.</p>
 
-    <div class="roadmap reveal">
-        <div class="roadmap-item">
-            <span class="roadmap-badge done">Готово</span>
-            <h4>Концепция и архитектура</h4>
-            <p>Определены принципы, стек и модель приватности.</p>
-        </div>
-        <div class="roadmap-item">
-            <span class="roadmap-badge active">В работе</span>
-            <h4>Ядро ленты и чатов</h4>
-            <p>Хронологическая лента и E2E-шифрование сообщений.</p>
-        </div>
-        <div class="roadmap-item">
-            <span class="roadmap-badge soon">Скоро</span>
-            <h4>Закрытая бета</h4>
-            <p>Приглашения для первых тестировщиков.</p>
-        </div>
-        <div class="roadmap-item">
-            <span class="roadmap-badge soon">Позже</span>
-            <h4>Публичный релиз</h4>
-            <p>Открытая регистрация и мобильные приложения.</p>
+        <div class="tech-grid reveal">
+            <span class="tech">X25519 <em>обмен ключами</em></span>
+            <span class="tech">AES-GCM <em>шифрование</em></span>
+            <span class="tech">E2E <em>сквозное</em></span>
+            <span class="tech">Zero-knowledge <em>подход</em></span>
+            <span class="tech">Open standards <em>без магии</em></span>
         </div>
     </div>
 </section>
 
-<!-- FAQ -->
-<section class="container section" id="faq">
-    <div class="section-tag">FAQ</div>
-    <h2>Частые вопросы</h2>
-    <p class="section-sub">Коротко о главном.</p>
+<section class="section">
+    <div class="container">
+        <div class="section__tag">Сравнение</div>
+        <h2 class="section__title">Почему Global Feed?</h2>
 
-    <div class="faq reveal">
-        <details>
-            <summary>Когда можно будет скачать приложение?</summary>
-            <div class="faq-body">Сейчас идёт закрытая бета. Дата публичного релиза появится в Telegram-канале — следите за обновлениями.</div>
-        </details>
-        <details>
-            <summary>Вы действительно не читаете сообщения?</summary>
-            <div class="faq-body">Да. Личные и групповые чаты используют сквозное шифрование (X25519 + AES-GCM). Ключи хранятся только на устройствах участников, сервер видит лишь зашифрованный поток.</div>
-        </details>
-        <details>
-            <summary>Будет ли реклама?</summary>
-            <div class="faq-body">В бете рекламы нет. В будущем она появится только для бесплатных пользователей, а VIP-подписка её отключит. Лента при этом останется хронологической.</div>
-        </details>
-        <details>
-            <summary>Как формируется лента?</summary>
-            <div class="faq-body">Только по подпискам и времени публикации. Новые посты сверху. Никаких рекомендательных алгоритмов и скрытой сортировки.</div>
-        </details>
-        <details>
-            <summary>На чём вы сделаны?</summary>
-            <div class="faq-body">Мы используем открытые криптографические стандарты и современный веб-стек. Подробности появятся в блоге разработки.</div>
-        </details>
+        <div class="comparison reveal">
+            <div class="comparison__grid">
+                <div class="comparison__col">
+                    <h4>У нас</h4>
+                    <ul>
+                        <li>Прямая хронология</li>
+                        <li>Сквозное шифрование</li>
+                        <li>Ты владеешь своими данными</li>
+                        <li>Честные правила</li>
+                    </ul>
+                </div>
+                <div class="comparison__col comparison__col--others">
+                    <h4>В других</h4>
+                    <ul>
+                        <li>Алгоритмы решают, что показать</li>
+                        <li>Сервер читает переписку</li>
+                        <li>Твой профиль продают рекламщикам</li>
+                        <li>Закрытый «чёрный ящик»</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- CTA -->
+<section class="section" id="roadmap">
+    <div class="container">
+        <div class="section__tag">Разработка</div>
+        <h2 class="section__title">Где мы сейчас</h2>
+        <p class="section__sub">Прозрачный путь от идеи до релиза.</p>
+
+        <div class="roadmap reveal">
+            <div class="roadmap__item">
+                <span class="roadmap__badge roadmap__badge--done">Готово</span>
+                <h4>Концепция и архитектура</h4>
+                <p>Определены принципы, стек и модель приватности.</p>
+            </div>
+            <div class="roadmap__item">
+                <span class="roadmap__badge roadmap__badge--active">В работе</span>
+                <h4>Ядро ленты и чатов</h4>
+                <p>Хронологическая лента и E2E-шифрование сообщений.</p>
+            </div>
+            <div class="roadmap__item">
+                <span class="roadmap__badge roadmap__badge--soon">Скоро</span>
+                <h4>Закрытая бета</h4>
+                <p>Приглашения для первых тестировщиков.</p>
+            </div>
+            <div class="roadmap__item">
+                <span class="roadmap__badge roadmap__badge--soon">Позже</span>
+                <h4>Публичный релиз</h4>
+                <p>Открытая регистрация и мобильные приложения.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="faq">
+    <div class="container">
+        <div class="section__tag">FAQ</div>
+        <h2 class="section__title">Частые вопросы</h2>
+        <p class="section__sub">Коротко о главном.</p>
+
+        <div class="faq reveal">
+            <details class="faq__item">
+                <summary>Когда можно будет скачать приложение?</summary>
+                <div class="faq__body">Сейчас идёт закрытая бета. Дата публичного релиза появится в Telegram-канале — следите за обновлениями.</div>
+            </details>
+            <details class="faq__item">
+                <summary>Вы действительно не читаете сообщения?</summary>
+                <div class="faq__body">Да. Личные и групповые чаты используют сквозное шифрование (X25519 + AES-GCM). Ключи хранятся только на устройствах участников, сервер видит лишь зашифрованный поток.</div>
+            </details>
+            <details class="faq__item">
+                <summary>Будет ли реклама?</summary>
+                <div class="faq__body">В бете рекламы нет. В будущем она появится только для бесплатных пользователей, а VIP-подписка её отключит. Лента при этом останется хронологической.</div>
+            </details>
+            <details class="faq__item">
+                <summary>Как формируется лента?</summary>
+                <div class="faq__body">Только по подпискам и времени публикации. Новые посты сверху. Никаких рекомендательных алгоритмов и скрытой сортировки.</div>
+            </details>
+            <details class="faq__item">
+                <summary>На чём вы сделаны?</summary>
+                <div class="faq__body">Мы используем открытые криптографические стандарты и современный веб-стек. Подробности появятся в блоге разработки.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
 <section class="container">
     <div class="cta reveal">
         <h2>Следи за разработкой</h2>
         <p>Первые новости, скриншоты и приглашения в бету — в Telegram.</p>
-        <a class="btn" href="https://t.me/minorgamestudio" target="_blank" rel="noopener">
-            Перейти в Telegram →
-        </a>
+        <a class="btn" href="https://t.me/minorgamestudio" target="_blank" rel="noopener">Перейти в Telegram →</a>
     </div>
 </section>
 
-<footer>
+<footer class="footer">
     <div class="container">
         <p>&copy; 2026 Global Feed. Сделано энтузиастами.</p>
-        <p style="margin-top: 10px;">
-            <a href="https://t.me/minorgamestudio" target="_blank" rel="noopener">Следить за разработкой в Telegram</a>
+        <p class="footer__links">
+            <a href="https://t.me/minorgamestudio" target="_blank" rel="noopener">Telegram</a>
         </p>
     </div>
 </footer>
 
-<script>
-    // Плавное появление блоков при скролле
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
