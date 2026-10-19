@@ -40,7 +40,7 @@
         }
 
         header {
-            padding: 100px 0 60px;
+            padding: 80px 0 60px;
         }
 
         .logo {
@@ -54,6 +54,19 @@
 
         .logo span {
             color: var(--primary);
+        }
+
+        /* Плашка Бета */
+        .beta-badge {
+            display: inline-block;
+            background-color: rgba(127, 156, 255, 0.15);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(127, 156, 255, 0.3);
         }
 
         h1 {
@@ -71,32 +84,19 @@
             margin: 0 auto 40px;
         }
 
-        .cta-btn {
+        .status-text {
             display: inline-block;
-            background-color: var(--primary);
-            color: #fff;
-            text-decoration: none;
-            padding: 16px 32px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 16px 24px;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-
-        .cta-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-
-        .cta-btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-subtext {
-            display: block;
-            margin-top: 12px;
-            font-size: 13px;
+            font-size: 15px;
             color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .status-text strong {
+            color: var(--text);
         }
 
         /* Преимущества */
@@ -201,11 +201,11 @@
         footer a {
             color: var(--text-muted);
             text-decoration: none;
-            margin: 0 10px;
+            transition: color 0.2s;
         }
 
         footer a:hover {
-            color: var(--text);
+            color: var(--primary);
         }
 
         @media (max-width: 600px) {
@@ -221,15 +221,18 @@
 
     <header class="container">
         <div class="logo">GLOBAL<span>FEED</span></div>
+        
+        <div class="beta-badge">Закрытая бета</div>
+        
         <h1>Честная лента.<br>Приватные чаты.</h1>
         <p class="subtitle">
             Социальная сеть, какой она должна быть. Без скрытых алгоритмов, которые решают, что тебе показать. Мы не читаем твои сообщения.
         </p>
         
-        <a href="https://github.com/YourReen/global_feed/releases" class="cta-btn" target="_blank" rel="noopener">
-            Скачать для Android
-        </a>
-        <span class="btn-subtext">Скоро в RuStore и Google Play. Для Linux и Web — в разработке.</span>
+        <div class="status-text">
+            Мы в процессе разработки. <strong>Скачивание пока недоступно.</strong><br>
+            Следите за обновлениями в нашем Telegram-канале.
+        </div>
 
         <div class="features">
             <div class="feature-card">
@@ -253,12 +256,12 @@
             <h2>Почему Global Feed?</h2>
             <div class="comparison-grid">
                 <div class="comparison-col">
-                    <h4>В нас</h4>
+                    <h4>У нас</h4>
                     <ul>
                         <li>Прямая хронология</li>
                         <li>Сквозное шифрование</li>
                         <li>Ты владеешь своими данными</li>
-                        <li>Открытый исходный код</li>
+                        <li>Честные правила</li>
                     </ul>
                 </div>
                 <div class="comparison-col others">
@@ -278,8 +281,7 @@
         <div class="container">
             <p>&copy; 2026 Global Feed. Сделано энтузиастами.</p>
             <p style="margin-top: 10px;">
-                <a href="https://github.com/YourReen/global_feed" target="_blank" rel="noopener">GitHub</a> • 
-                <a href="https://t.me/your_telegram_channel" target="_blank" rel="noopener">Telegram</a>
+                <a href="https://t.me/your_telegram_channel" target="_blank" rel="noopener">Следить за разработкой в Telegram</a>
             </p>
         </div>
     </footer>
