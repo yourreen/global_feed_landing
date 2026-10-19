@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Feed — Честная лента и приватные чаты</title>
+    <meta name="description" content="Социальная сеть без алгоритмов. Только хронология. Приватные чаты с E2E-шифрованием. Мы не читаем ваши сообщения.">
+    <style>
+        :root {
+            --bg: #0e1016;
+            --surface: #161923;
+            --text: #eaeef7;
+            --text-muted: #9aa2b6;
+            --primary: #7f9cff;
+            --primary-hover: #6688ff;
+            --border: #262b38;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        header {
+            padding: 100px 0 60px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .cta-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-subtext {
+            display: block;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Преимущества */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 80px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        /* Сравнение (МЫ против ОНИ) */
+        .comparison {
+            margin-top: 80px;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: left;
+        }
+
+        .comparison h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-col h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-col ul {
+            list-style: none;
+        }
+
+        .comparison-col li {
+            margin-bottom: 12px;
+            font-size: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .comparison-col.others {
+            opacity: 0.6;
+        }
+
+        .comparison-col li::before {
+            content: "✓";
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .comparison-col.others li::before {
+            content: "✕";
+            color: #f87171;
+        }
+
+        /* Футер */
+        footer {
+            margin-top: auto;
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 36px; }
+            .subtitle { font-size: 18px; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .comparison-col.others { margin-top: 24px; }
+            header { padding: 60px 0 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="container">
+        <div class="logo">GLOBAL<span>FEED</span></div>
+        <h1>Честная лента.<br>Приватные чаты.</h1>
+        <p class="subtitle">
+            Социальная сеть, какой она должна быть. Без скрытых алгоритмов, которые решают, что тебе показать. Мы не читаем твои сообщения.
+        </p>
+        
+        <a href="https://github.com/YourReen/global_feed/releases" class="cta-btn" target="_blank" rel="noopener">
+            Скачать для Android
+        </a>
+        <span class="btn-subtext">Скоро в RuStore и Google Play. Для Linux и Web — в разработке.</span>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">⏳</div>
+                <h3>Только хронология</h3>
+                <p>Ты видишь все посты людей, на которых подписан. Новые сверху. Никакой магии и «умной» сортировки.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>E2E-шифрование</h3>
+                <p>Личные и групповые чаты защищены сквозным шифрованием (X25519 + AES-GCM). Ключи есть только у вас.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚫</div>
+                <h3>Ноль рекламы</h3>
+                <p>Пока в бете — никакой рекламы. В будущем она появится только для бесплатных пользователей. VIP-подписка её отключает.</p>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h2>Почему Global Feed?</h2>
+            <div class="comparison-grid">
+                <div class="comparison-col">
+                    <h4>В нас</h4>
+                    <ul>
+                        <li>Прямая хронология</li>
+                        <li>Сквозное шифрование</li>
+                        <li>Ты владеешь своими данными</li>
+                        <li>Открытый исходный код</li>
+                    </ul>
+                </div>
+                <div class="comparison-col others">
+                    <h4>В других</h4>
+                    <ul>
+                        <li>Алгоритмы решают, что показать</li>
+                        <li>Сервер читает переписку</li>
+                        <li>Твой профиль продают рекламщикам</li>
+                        <li>Закрытый «чёрный ящик»</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Global Feed. Сделано энтузиастами.</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/YourReen/global_feed" target="_blank" rel="noopener">GitHub</a> • 
+                <a href="https://t.me/your_telegram_channel" target="_blank" rel="noopener">Telegram</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
